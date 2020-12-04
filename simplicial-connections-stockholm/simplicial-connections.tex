@@ -1,0 +1,472 @@
+%!TEX program = xelatex
+\documentclass{beamer}
+
+\usetheme[numbering=fraction,block=fill,background=dark]{metropolis}
+
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{tikz-cd}
+
+\title{Simplicial connections and resolutions\\for coherent analytic sheaves}
+% \subtitle{An example of local to global constructions via simplices}
+\author{Tim Hosgood}
+\institute{Centre for Quantum Technologies (Singapore)\\Topos Institute (USA)}
+\date{2\textsuperscript{nd} December, 2020}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}\frametitle{The main goal}
+  Constructing characteristic classes of smooth vector bundles or coherent algebraic sheaves is ``easy''.
+
+  \pause
+
+  What about in the complex-analytic case?
+
+  \pause
+
+  That is, given some $(X,\mathcal{O}_X)$, where $X$ is a paracompact complex-analytic manifold, and $\mathcal{O}_X$ is the sheaf of holomorphic functions, can we construct some nice
+  \[
+    \mathsf{Coh}(X) \to \mathrm{H}_\mathrm{dR}^\mathrm{even}(X)
+  \]
+  in a similar way?
+\end{frame}
+
+
+\section{Preliminaries}
+
+  \begin{frame}\frametitle{Coherent sheaves}
+    Coherent sheaves are a generalisation of vector bundles that form an abelian category.
+
+    \pause
+
+    \begin{definition}
+      A sheaf $\mathscr{E}$ on a ringed space $(X,\mathcal{O}_X)$ is said to be \textbf{of finite type} over $\mathcal{O}_X$ if, for all $x$ in $X$, there exists some \emph{surjective} morphism
+      \[
+        \mathcal{O}_X^n|U \twoheadrightarrow \mathscr{F}|U
+      \]
+      for some open neighbourhood $U$ of $x$, and some $n\in\mathbb{N}$.
+    \end{definition}
+
+    \begin{definition}
+      A sheaf $\mathscr{E}$ on a ringed space $(X,\mathcal{O}_X)$ is said to be \textbf{coherent} if
+      \begin{enumerate}[(i)]
+        \item $\mathscr{E}$ is of finite type over $\mathcal{O}_X$ ; and
+        \item the kernel of any $\mathcal{O}_X^n|U \to \mathscr{F}|U$ is of finite type.
+      \end{enumerate}
+    \end{definition}
+  \end{frame}
+
+  \begin{frame}\frametitle{Connections}
+    \begin{definition}
+      The \textbf{Atiyah exact sequence} (or \textbf{jet sequence}) of a locally free sheaf $E$ on a ringed space $(X,\mathcal{O}_X)$ is the short exact sequence
+      \[
+        0
+        \to E\otimes_{\mathcal{O}_X}\Omega_X^1
+        \to J^1(E)
+        \to E
+        \to 0
+      \]
+      of $\mathcal{O}_X$-modules, where $J^1(E) = (E\otimes\Omega_X^1)\oplus E$ \emph{as a $\mathbb{C}_X$-module}, but with an $\mathcal{O}_X$-action given by
+      \[
+        f(s\otimes\omega, t) = (fs\otimes\omega+t\otimes\mathrm{d}f, ft).
+      \]
+
+      The \textbf{Atiyah class} of $E$ is the extension class
+      \[
+        \mathrm{at}_E
+        = [J^1(E)] \in \mathrm{Ext}_{\mathcal{O}_X}^1(E,E\otimes\Omega_X^1).
+      \]
+    \end{definition}
+  \end{frame}
+
+  \begin{frame}\frametitle{Connections}
+    \begin{definition}
+      A \textbf{Koszul connection} $\nabla$ on $E$ is a splitting of the Atiyah exact sequence of $E$.
+      That is, $\nabla$ is a $\mathbb{C}$-linear morphism
+      \[
+        \nabla\colon E \to E\otimes_{\mathcal{O}_X}\Omega_X^1
+      \]
+      such that
+      \[
+        \nabla(fs) = f\nabla(s) + s\otimes\mathrm{d}f
+      \]
+      for any local section $s$ of $E$.
+    \end{definition}
+  \end{frame}
+
+  \begin{frame}\frametitle{Connections}
+    \begin{lemma}
+      \emph{Locally}, any connection can be written as
+      \[
+        \mathrm{d} + \overline{\omega}
+      \]
+      where $\overline{\omega} \in \underline{\mathrm{Hom}}(E,E\otimes\Omega_X^1) \cong \underline{\mathrm{Hom}}(E,E)\otimes\Omega_X^1$ is an \textbf{endomorphism-valued form}.
+    \end{lemma}
+  \end{frame}
+
+  \begin{frame}\frametitle{Curvature}
+    By definition, connections are \emph{not} $\mathcal{O}_X$-linear, i.e.
+    \[
+      \nabla(fs) = f\nabla(s) + s\otimes\mathrm{d}f
+      \neq f\nabla(s).
+    \]
+
+    \pause
+
+    \begin{definition}
+      We say that a morphism $\widetilde{\nabla}\colon E\otimes\Omega_X^r \to E\otimes\Omega_X^{r+1}$ satisfies the \textbf{Leibniz rule} if
+      \[
+        \widetilde{\nabla}(s\otimes\omega)
+        \widetilde{\nabla}(s)\wedge\omega + s\otimes\mathrm{d}\omega.
+      \]
+    \end{definition}
+
+    \pause
+
+    Note that, if $\widetilde{\nabla}$ satisfies the Leibniz rule, then
+    \[
+      \widetilde{\nabla}(fs\otimes\omega)
+      = \widetilde{\nabla}(s\otimes f\omega).
+    \]
+  \end{frame}
+
+  \begin{frame}\frametitle{Curvature}
+    \begin{definition}
+      The \textbf{curvature} of a connection $\nabla$ is the morphism
+      \[
+        \kappa(\nabla) = \nabla\circ\nabla
+        \colon E \to E\otimes\Omega_X^2
+      \]
+      given by imposing the Leibniz rule.
+    \end{definition}
+
+    \pause
+
+    \begin{lemma}
+      \emph{Locally}, the curvature of any connection can be written as
+      \[
+        \mathrm{d}\overline{\omega} + \overline{\omega}^2.
+      \]
+    \end{lemma}
+  \end{frame}
+
+  \begin{frame}\frametitle{Chern--Weil theory}
+    How do all of the previous things link together?
+    All of the above can be defined for \emph{principal bundles}, and then we have the following theorem.
+
+    \pause
+
+    \begin{theorem}[Chern--Weil homomorphism]
+      Let $P$ be a $G$-principal bundle on $X$.
+      Then there is a corresponding homomorphism
+      \[
+        \mathbb{C}[\mathfrak{g}]^G
+        \to \mathrm{H}_\mathrm{dR}^\bullet(X)
+      \]
+      of $\mathbb{C}$-algebras given by evaluation on the curvature of any connection.
+    \end{theorem}
+
+    The ``prototypical element'' of $\mathbb{C}[\mathfrak{g}]^G$ is the \textbf{trace}.
+  \end{frame}
+
+
+\section{Complex-analytic geometry}
+
+  \begin{frame}\frametitle{The algebraic setting}
+    When $(X,\mathcal{O}_X)$ is a nice scheme over $\mathbb{C}$, then we can calculate the Chern classes of any coherent sheaf $\mathscr{E}$ on $X$ by
+    \begin{enumerate}
+      \item taking a resolution $E^\bullet\to\mathscr{E}$ by locally free sheaves ; and
+      \item taking the alternating sum of $\mathrm{tr}\kappa(\nabla_i)^p$, where $\nabla_i$ is a connection on $E^i$.
+    \end{enumerate}
+  \end{frame}
+
+  \begin{frame}\frametitle{Problems in the analytic setting}
+    Both of the steps in the algebraic method go wrong in when $(X,\mathcal{O}_X)$ is a (paracompact) complex-analytic manifold:
+    \begin{enumerate}
+      \item coherent sheaves rarely admit resolutions by locally free sheaves ; and
+      \item locally free sheaves rarely admit connections.
+    \end{enumerate}
+  \end{frame}
+
+  \begin{frame}\frametitle{Problems in the analytic setting}
+    For the second point, note that the Atiyah class is exactly the obstruction towards admitting a (global) connection, by definition as an extension class.
+
+    \pause
+
+    \begin{lemma}
+      The trace of the Atiyah class ``is'' the first Chern class.
+      The traces of the higher Atiyah classes ``are'' the higher Chern classes/characters.
+    \end{lemma}
+
+    \pause
+
+    Combining these two things, we see that the only time we could maybe apply Chern--Weil theory is exactly when the characteristic classes are zero!
+  \end{frame}
+
+  \begin{frame}\frametitle{Local solutions to the problems}
+
+    \begin{lemma}
+      Given a locally free sheaf $E$, we can always find a ``nice'' \textbf{Stein} cover $\mathscr{U}=\{U_\alpha\}$ of $X$ that trivialises $E$.
+    \end{lemma}
+
+    \pause
+
+    \begin{lemma}
+      Any coherent sheaf admits a \textbf{local} resolution by locally free sheaves.
+    \end{lemma}
+
+    \pause
+
+    \begin{lemma}
+      Any locally free sheaf on a \textbf{Stein} manifold admits a holomorphic connection.
+    \end{lemma}
+
+    \pause
+
+    So everything works \emph{locally}.
+  \end{frame}
+
+  \begin{frame}\frametitle{Local solutions to the problems}
+    \begin{lemma}
+      If we have a \emph{Stein} cover $\mathscr{U}=\{U_\alpha\}$ of $X$, with connections $\nabla_\alpha$ on each $E|U_\alpha$, then the Atiyah class is represented by the cocycle $\omega_{\alpha\beta}=\nabla_\beta-\nabla_\alpha$ ; this satisfies $\mathrm{d}\omega_{\alpha\beta}+\omega_{\alpha\beta}^2=0$ and $\mathrm{d}\operatorname{tr}\omega_{\alpha\beta}=0$.
+    \end{lemma}
+
+    \pause
+
+    But normally Chern--Weil theory talks about characteristic classes as \emph{curvatures} of connections, and here the curvature of $\mathrm{d}+\omega_{\alpha\beta}$ is \emph{zero}.
+
+    Can we fix this?
+  \end{frame}
+
+  \begin{frame}\frametitle{The main idea}
+    Our goal is to take all of the local data (i.e. the local resolutions by locally free sheaves, with local connections) and try to glue it together into some global object that ``looks enough like'' a connection in order to be able to apply Chern--Weil theory and recover the Chern classes as curvatures of these ``almost connections''.
+
+    \pause
+
+    Note that we can't hope to get an actual global resolution or an actual global connection, because we already know that, in most cases, these things don't exist.
+  \end{frame}
+
+  \begin{frame}\frametitle{The main idea}
+    There are two things we need to glue:
+    \begin{enumerate}
+      \item the resolutions ; and
+      \item the connections.
+    \end{enumerate}
+
+    We do both in slightly different ways, but always by using \textbf{simplices}.
+    The former leads to the notion of \textbf{twisting cochains}; the latter to \textbf{admissible simplicial connections}.
+
+    \pause
+
+    The former is purely classical; the latter was studied by Green (1980) and O'Brian, Toledo, and Tong, but not in a categorical way.
+  \end{frame}
+
+
+\section{Simplicial connections: locally free sheaves → characteristic classes}
+
+  \begin{frame}\frametitle{Double intersections}
+    Given local connections $\nabla_\alpha$ and $\nabla_\beta$, the problem is that, over $U_{\alpha\beta}$, they there is no reason to expect them to agree.
+
+    \pause
+
+    Rather than making a choice of which one to use over the intersection, we can actually just use \textbf{both}: consider the formal linear combination
+    \[
+      t\nabla_\beta + (1-t)\nabla_\alpha
+    \]
+    for $0\leqslant t\leqslant1$.
+    This contains all the information of both connections (at $t=0$ and $t=1$).
+
+    \pause
+
+    This is now a ``connection'' on $U_{\alpha\beta}\times[0,1]$.
+  \end{frame}
+
+  \begin{frame}\frametitle{Higher intersections}
+    Given local connections $\nabla_{\alpha_0},\ldots,\nabla_{\alpha_p}$, we can take their \textbf{barycentric average} in the same way:
+    \[
+      \sum_{i=0}^p t_i \nabla_{\alpha_i}
+    \]
+    where $\sum_{i=1}^p t_i\leqslant1$ and $t_0=1-\sum_{i=1}^p t_i$.
+
+    \pause
+
+    This is now a ``connection'' on $U_{\alpha_0\ldots\alpha_p}\times\Delta^p$.
+  \end{frame}
+
+  \begin{frame}\frametitle{Barycentric simplicial connection}
+    We can thus construct the \textbf{barycentric simplicial connection} $\nabla_\bullet^\mu$, where, over each $U_{\alpha_0\ldots\alpha_p}$,
+    \[
+      \nabla_p^\mu = \sum_{i=0}^p t_i\nabla_{\alpha_i}.
+    \]
+
+    \pause
+
+    A very useful (but seemingly trivial) fact is that
+    \[
+      \nabla_p^\mu = \nabla_{\alpha_0} + \sum_{i=1}^p t_i(\nabla_{\alpha_i}-\nabla_{\alpha_0}).
+    \]
+    \pause
+    So, if we define $\omega_{\alpha_0\alpha_i} = \nabla_{\alpha_i}-\nabla_{\alpha_0}$, then
+    \[
+      \nabla_p^\mu \approx \mathrm{d} + \sum_{i=1}^p \omega_{\alpha_0\alpha_i}.
+    \]
+    \pause
+    This brings the Atiyah class $\omega_{\alpha\beta}$ into play.
+  \end{frame}
+
+  \begin{frame}\frametitle{Barycentric simplicial connection}
+    Writing $\overline{\omega}_p = \sum_{i=1}^p \omega_{\alpha_0\alpha_i}$, we can show that
+    \[
+      \kappa(\nabla_p^\mu) = \mathrm{d}\overline{\omega}_p + \overline{\omega}_p^2.
+    \]
+
+    \pause
+
+    So this thing really looks like a connection with a curvature, and it encodes the Atiyah class, so we should be able to take its trace to get a characteristic class (Chern--Weil)!
+
+    \pause
+
+    \textbf{N.B.} $\mathrm{d}\omega_{\alpha_0\alpha_i}+\omega_{\alpha_0\alpha_i}^2=0$, but $\mathrm{d}\overline{\omega}_p+\overline{\omega}_p^2\neq0$.
+    But this is what we wanted: we now have a ``connection'' which is \textbf{not} flat.
+  \end{frame}
+
+  \begin{frame}\frametitle{Formal properties}
+    The $\overline{\omega}_p$ satisfy some properties that make it a \textbf{simplicial differential form}, i.e. a form on the product of the Čech nerve with the simplex category ($X_\bullet^\mathscr{U}\times\Delta^\bullet$) satisfying some conditions that ensures it descends to the fat geometric realisation.
+
+    \pause
+
+    We won't talk about these here, but they are \textbf{very} important if we wish to give a formal definition of what a ``simplicial connection'' should be.
+  \end{frame}
+
+  \begin{frame}\frametitle{Fibre integration}
+    The problem now is that $\kappa(\nabla_\bullet^\mu)$ has extra terms in it that we don't want, i.e.
+    \[
+      \kappa(\nabla_\bullet^\mu) =
+      \left\{
+        -\sum_{i=1}^p \omega_{\alpha_0\alpha_i}\otimes\mathrm{d}t_i
+        -\sum_{i=1}^p t_i\omega_{\alpha_0\alpha_i}^2
+        +\sum_{i,j=1}^p t_jt_i\omega_{\alpha_0\alpha_j}\omega_{\alpha_0\alpha_i}
+      \right\}_{p\in\mathbb{N}}.
+    \]
+
+    \pause
+
+    We can get rid of these in a ``good'' way (i.e. via a quasi-isomorphism from the simplicial de Rham complex to the usual de Rham complex) using Dupont's \textbf{fibre integration}, which simply integrates the $\kappa(\nabla_p^\mu)$ term over the geometric $p$-simplex.
+  \end{frame}
+
+
+\section{Simplicial resolutions: coherent sheaves → locally free sheaves}
+
+  \begin{frame}\frametitle{Twisting cochains as `gluing up to homotopy'}
+    \begin{lemma}
+      Coherent sheaves on paracompact complex-analytic manifolds can always be resolved by a \textbf{twisting cochain}.
+    \end{lemma}
+
+    \pause
+
+    A twisting cochain consists of ``infinite homotopy gluing data'', i.e. it is the data of
+    \begin{itemize}
+      \item local resolutions by locally free sheaves
+      \item quasi-inverse morphisms between these complexes
+      \item homotopies witnessing these quasi-isomorphisms
+      \item homotopies witness the failure of the above homotopies to commute with the quasi-isomorphisms
+      \item homotopies between these homotopies witnessing ...
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}\frametitle{Twisting cochains, formally}
+    Twisting cochains are exactly Maurer--Cartan elements in some cochain complex:
+    \[
+      \begin{gathered}
+        \mathfrak{a} = \sum_{k\in\mathbb{N}} \mathfrak{a}^{k,1-k}
+        \in \mathrm{Tot}^1\hat{\mathscr{C}}^\bullet(\mathscr{U},\mathrm{End}^\star(V))
+      \\\mbox{such that}
+      \\\hat{\delta}\mathfrak{a} + \mathfrak{a}^2 = 0
+      \\\mbox{(and also such that $\mathfrak{a}_{\alpha\alpha}^{1,0}=\mathrm{id}$ and $\mathfrak{a}_\alpha^{1,0}=\mathrm{d}_\alpha$).}
+      \end{gathered}
+    \]
+
+    Here $V$ is the collection of local resolutions by locally free sheaves, and $\hat{\mathscr{C}}$ is the \textbf{deleted Čech complex}.
+  \end{frame}
+
+  \begin{frame}\frametitle{Green's resolution}
+    \begin{theorem}[Green, 1980]
+      Let $\mathscr{E}$ be a coherent sheaf on a paracompact complex-analytic manifold $(X,\mathcal{O}_X)$ with ``nice'' Stein cover $\mathscr{U}=\{U_\alpha\}$.
+      Then we can inductively modify a twisting cochain for $\mathscr{E}$ to obtain a ``very nice'' complex of locally free sheaves on the nerve that resolves $\mathscr{E}$.
+    \end{theorem}
+
+    \pause
+
+    In the same way that ``simplicial connections'' are somehow local connection all bundled up together, ``locally free sheaves on the nerve'' are somehow local locally free sheaves all bundled up together.
+  \end{frame}
+
+  \begin{frame}\frametitle{Vector bundles on the nerve vs. simplicial vector bundles}
+    We refrain from calling these things ``simplicial vector bundles'' because that can be a misleading name: they are \textbf{not} simplicial objects in some category of vector bundles!
+
+    \pause
+
+    They are really lax limit objects, or cosimplicial diagrams, or decent data, or ...
+
+    \pause
+
+    \begin{definition}[Vague]
+      A \textbf{sheaf on a simplicial space} $Y_\bullet$ is a collection of sheaves $\mathscr{F}^p$ on $Y_p$ along with functorial morphisms
+      \[
+        \mathscr{F}^\bullet(\alpha)\colon (Y_\bullet\alpha)^*\mathscr{F}^p \to \mathscr{F}^q
+      \]
+      for all morphisms $\alpha\colon[p]\to[q]$ in $\Delta$.
+    \end{definition}
+
+    The Čech nerve is the simplicial space given by ``blowing up'' a cover.
+  \end{frame}
+
+  \begin{frame}\frametitle{Some other views of twisting cochains}
+    There are lots!
+    \begin{itemize}
+      \item Twisted complexes
+      \item Maurer--Cartan elements (i.e. deformations)
+      \item dg-nerve
+      \item bar/cobar stuff
+    \end{itemize}
+  \end{frame}
+
+
+\section{Formal equivalences}
+
+  \begin{frame}\frametitle{The main theorem}
+    \begin{theorem}
+      There is an equivalence of $(\infty,1)$-categories:
+      \[
+        \operatorname{hocolim}_\mathscr{U} \mathrm{L}\mathsf{Green}_{\nabla,0}(X_\bullet^\mathscr{U})
+        \simeq
+        \mathrm{L}\mathsf{CCoh}(X).
+      \]
+    \end{theorem}
+  \end{frame}
+
+
+\section{What next?}
+
+  \begin{frame}\frametitle{Generalisations}
+    \begin{itemize}
+      \item Deligne cohomology
+    \pause
+      \item Rigid analytic geometry, Artin stacks
+      \item Equivariant cohomology
+      \item Foliations
+      \item etc.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}\frametitle{Open questions}
+    \begin{itemize}
+      \item Coherent complexes vs. complexes with coherent cohomology
+      \item General approach for local-to-global constructions
+    \end{itemize}
+  \end{frame}
+
+
+\end{document}
